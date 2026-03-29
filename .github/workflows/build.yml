@@ -1,0 +1,32 @@
+name: Gerar Executavel Windows
+
+on:
+  push:
+    branches: [ main ]  # O robô aciona quando você envia para o braço 'main'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Coletando o codigo do Mateus
+      uses: actions/checkout@v4
+
+    - name: Instalando o Python no Servidor
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Instalando Rich e PyInstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install rich pyinstaller
+
+    - name: Criando o .EXE (Processamento)
+      run: pyinstaller --onefile megasena.py
+
+    - name: Entregando o Bilhete (Download)
+      uses: actions/upload-artifact@v4
+      with:
+        name: MegaSena_Windows
+        path: dist/*.exe
